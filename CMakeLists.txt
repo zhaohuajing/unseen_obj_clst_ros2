@@ -36,6 +36,12 @@ install(PROGRAMS
 )
 
 install(PROGRAMS
+  unseen_obj_clst_ros2/segmentation_rgbd_server.py
+  DESTINATION lib/${PROJECT_NAME}
+  RENAME segmentation_rgbd_server
+)
+
+install(PROGRAMS
   unseen_obj_clst_ros2/segmentation_client.py
   DESTINATION lib/${PROJECT_NAME}
   RENAME segmentation_client
