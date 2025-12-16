@@ -39,19 +39,19 @@ All three servers ultimately call the same **Unseen Object Clustering inference 
                                                   |     Gazebo / GZ Sim     |      
                                                   |   (RGBD camera sensor)  |               
                                                   +-------------------------+               
-                                                                |   /rgbd_camera/image                                           
-                                             (GZ -> ROS topics) |   /rgbd_camera/depth_image                                       
-                                                                v   /rgbd_camera/camera_info                                     
+                                                              |   /rgbd_camera/image                                           
+                                          (GZ -> ROS topics)  |   /rgbd_camera/depth_image                                       
+                                                              v   /rgbd_camera/camera_info                                     
 +-------------------+    /segmentation_rgbd    +-------------------------------+                     +------------------------------------+
-|   ROS2 Client     |  --------------------->  |      ROS 2 Server Node        |   --------------->  |      Docker (unseen_obj env)       |
-| (service call)    |    (SegImage.srv)        |  segmentation_rgbd_server.py  |   (subprocess call) | test_images_segmentation_no_ros.py |
+|   ROS2 Client     |  --------------------->  |      ROS 2 Server Node        | ----------------->  |      Docker (unseen_obj env)       |
+| (service call)    |    (SegImage.srv)        |  segmentation_rgbd_server.py  |  (subprocess call)  | test_images_segmentation_no_ros.py |
 +-------------------+                          +-------------------------------+                     +------------------------------------+ 
-      ^                                               |              ^                                    (scene object segmentation) 
-      |                                               |              | /result_path                                  |
-      |                                               |              |                                               |                                             
-      |                                               |              |       +------------------------------+        |          
-      |   (parse + return segmentation results)       |              |       |  Outputs on shared volume:   |        |           
-      +-----------------------------------------------+              + ----  |  - im_label.npy              | <------+ 
+         ^                                               |         ^                                      (scene object segmentation) 
+         |                                               |         |   /result_path                                    |
+         |                                               |         |                                                   |                                             
+         |                                               |         |         +------------------------------+          |          
+         |   (parse + return segmentation results)       |         |         |  Outputs on shared volume:   |          |           
+         +-----------------------------------------------+         +-------- |  - im_label.npy              | <--------+ 
                                                                              |  - segmentation.json         |            
                                                                              +------------------------------+            
 
