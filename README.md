@@ -39,21 +39,22 @@ All three servers ultimately call the same **Unseen Object Clustering inference 
                                                   |     Gazebo / GZ Sim     |      
                                                   |   (RGBD camera sensor)  |               
                                                   +-------------------------+               
-                                                           |   /rgbd_camera/image                                           
-                                        (GZ -> ROS topics) |   /rgbd_camera/depth_image                                       
-                                                           v   /rgbd_camera/camera_info                                     
-+-------------------+                             +------------------------------+   
-|   ROS2 Client     |  --------------------->     |      ROS 2 Server Node       |
-| (service call)    |  /segmentation_rgbd         |  segmentation_rgbd_server.py |
-+-------------------+  (SegImage.srv)             +------------------------------+ 
-      ^                                                       |
-      |   (parse + return via ROS2 service)                   |   (subprocess call)   
-      |                                                       v
-+------------------------------+                 +------------------------------------+
-|  Outputs on shared volume:   |                 |      Docker (unseen_obj env)       |
-|  - im_label.npy              | <-------------  | test_images_segmentation_no_ros.py |
-|  - segmentation.json         |                 |     (scene object segmentation)    |
-+------------------------------+                 +------------------------------------+ 
+                                                                |   /rgbd_camera/image                                           
+                                             (GZ -> ROS topics) |   /rgbd_camera/depth_image                                       
+                         /segmentation_rgbd                     v   /rgbd_camera/camera_info                                     
++-------------------+    (SegImage.srv)        +-------------------------------+                     +------------------------------------+
+|   ROS2 Client     |  --------------------->  |      ROS 2 Server Node        |   --------------->  |      Docker (unseen_obj env)       |
+| (service call)    |                          |  segmentation_rgbd_server.py  |   (subprocess call) | test_images_segmentation_no_ros.py |
++-------------------+                          +-------------------------------+                     +------------------------------------+ 
+      ^                                               |              ^                                    (scene object segmentation) 
+      |                                               |              | /result_path                                  |
+      |                                               |              |                                               |                                             
+      |                                               |              |       +------------------------------+        |          
+      |   (parse + return segmentation results)       |              |       |  Outputs on shared volume:   |        |           
+      +-----------------------------------------------+              + ----  |  - im_label.npy              | <------+ 
+                                                                             |  - segmentation.json         |            
+                                                                             +------------------------------+            
+
 
 
 ```
